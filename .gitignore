@@ -95,6 +95,8 @@ mobiEnv/
 
 # migrations
 !helpers/__init__.py
+**/migrations/*
+!**/migrations/__init__.py
 
 # Others
 static/downloads
