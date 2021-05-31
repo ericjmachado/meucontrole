@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+  <div class="card">
+    <h2 style="text-align: center"> Registro Meu Controle </h2>
+    <form action="{% url 'register' %}" method="post">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <div class="submit-div">
+        <button type="submit" class="btn btn-primary btn-large">Registrar</button>
+      </div>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,27 @@
+.container {
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.card {
+    width: 100%;
+    padding: 10px 20px;
+    box-shadow: 1px 1px 13px 0px rgba(0, 0, 0, 0.35);
+}
+
+.card > form {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.card > form .submit-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn-large {
+    margin: 2rem 0;
+    padding: 10px 5rem;
+}
