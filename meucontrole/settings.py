@@ -19,7 +19,14 @@ import django_heroku
 import dotenv
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-dotenv.read_dotenv(os.path.join(BASE_DIR, '.env'))
+ENV_PATH = os.path.join(BASE_DIR, '.env')
+
+try:
+    with open(ENV_PATH) as f:
+        dotenv.read_dotenv(ENV_PATH)
+except IOError:
+    pass
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
