@@ -1,4 +1,5 @@
 {% load static %}
+{% load pwa %}
 
 <!doctype html>
 <html lang="en">
@@ -8,7 +9,12 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
         integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
   <title>{% block title %}{% endblock %}</title>
-  <link type="text/css" href="{% static 'style.css' %}" rel="stylesheet">
+  <link type="text/css" href="{% static 'style.css' %}" rel="stylesheet /">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'images/apple-touch-icon.png' %} /">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'images/favicon-32x32.png' %} /">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'images/favicon-16x16.png' %} /">
+  <link rel="manifest" href="{% static 'images/site.webmanifest' %} /">
+  {% progressive_web_app_meta %}
 </head>
 <body>
 
@@ -16,8 +22,7 @@
 
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" href="#">
-      Bem vindo(a) &nbsp; <b style="text-align: center">{{ request.user.username | title }}</b>
-
+      Bem vindo(a) &nbsp;<b style="text-align: center">{{ request.user.username | title }}</b>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
             aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -26,8 +31,11 @@
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
         {% url 'home' as home_url %}
+        {% url 'plan' as plan_url %}
+        {% url 'expense' as expense_url %}
         <a class="nav-link {% ifequal request.path home_url %}active{% endifequal %}" href="{{ home_url }}">Home</a>
-        <a class="nav-link {% ifequal request.path home_url %}active{% endifequal %}" href="#">Plano</a>
+        <a class="nav-link {% ifequal request.path plan_url %}active{% endifequal %}" href="{{ plan_url }}">Plano</a>
+        <a class="nav-link {% ifequal request.path expense_url %}active{% endifequal %}" href="{{ expense_url }}">Despesa</a>
       </div>
     </div>
   </nav>

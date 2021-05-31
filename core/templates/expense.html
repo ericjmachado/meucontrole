@@ -1,11 +1,11 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 
-{% block title %}Plano{% endblock %}
+{% block title %}Adicionar despesas{% endblock %}
 
 {% block content %}
   <div class="card">
-    <form action="{% url 'plan' %}" method="post">
+    <form action="{% url 'expense' %}" method="post">
       {% csrf_token %}
       {{ form|crispy }}
       <div class="submit-div">

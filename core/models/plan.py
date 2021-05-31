@@ -1,12 +1,11 @@
-import uuid
-
 from django.contrib.auth.models import User
 from django.db import models
 
+from core.mixins import SystemModel
 
-class Plan(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, unique=True)
+
+class Plan(SystemModel):
     user = models.OneToOneField(User, on_delete=models.CASCADE, blank=True)
-    earn = models.FloatField(blank=True)
-    save = models.FloatField(blank=True)
-    fixed = models.FloatField(blank=True)
+    earn = models.FloatField(blank=True, verbose_name="Ganhos (mensais)")
+    save_money = models.FloatField(blank=True, verbose_name="Dinheiro desejável a poupar (mensais)")
+    fixed = models.FloatField(blank=True, verbose_name="Gastos totais (mensais)")
