@@ -94,8 +94,6 @@ mobiEnv/
 .idea/*
 
 # migrations
-**/migrations/*
-!**/migrations/__init__.py
 !helpers/__init__.py
 
 # Others
