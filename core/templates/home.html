@@ -2,14 +2,15 @@
 
 
 {% block content %}
-  <h2 class="text-center mb-4">Filtrar despesas</h2>
+  <h3 class="text-center mb-4">Filtrar despesas</h3>
   <div class="row">
     <div class="col">
       <label for="month">Mês</label>
       <select id="month" class="form-control">
         {% for month in months %}
           <option value="{{ month.value }}"
-                  {% if month_selected == month.value %}selected{% endif %}>{{ month.label }}</option>
+                  {% if month_selected == month.value %}selected{% endif %}>{{ month.label }}
+          </option>
         {% endfor %}
       </select>
     </div>
@@ -21,35 +22,47 @@
         {% endfor %}
       </select>
     </div>
-  </div>
-
-  <div class="row">
-    <div class="table-responsive">
-      <table class="table table-hover">
-        <thead>
-        <tr>
-          <th scope="col">Despesa</th>
-          <th scope="col">Valor</th>
-          <th scope="col">Descrição</th>
-          <th scope="col">Data</th>
-          <th scope="col">Ação</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for expense in page_obj %}
-          <tr>
-            <td>{{ expense.name }}</td>
-            <td>{{ expense.value }}</td>
-            <td>{{ expense.description|truncatechars:9 }}</td>
-            <td>{{ expense.date }}</td>
-            <td></td>
-          </tr>
-        {% endfor %}
-        </tbody>
-      </table>
+    <div class="col-12 mt-4">
+      <label for="expense">Despesa</label>
+      <input type="text" id="expense"
+             class="form-control" placeholder="Insira o nome da despesa para filtrar"
+             value="{{ expense }}"
+      >
+    </div>
+    <div class="col-12 d-flex">
+      <button type="button" class="btn btn-primary btn-large" id="filter-button">Filtrar</button>
     </div>
   </div>
-  <div class="pagination">
+
+  <h3 class="text-center my-4">Despesas</h3>
+  {% if page_obj %}
+    <div class="row">
+      <div class="table-responsive">
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th scope="col">Despesa</th>
+            <th scope="col">Valor</th>
+            <th scope="col">Descrição</th>
+            <th scope="col">Data</th>
+            <th scope="col">Ação</th>
+          </tr>
+          </thead>
+          <tbody>
+          {% for expense in page_obj %}
+            <tr>
+              <td>{{ expense.name }}</td>
+              <td>R$ {{ expense.value }}</td>
+              <td>{{ expense.description|truncatechars:9 }}</td>
+              <td>{{ expense.date }}</td>
+              <td></td>
+            </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
           <a href="?page=1">&laquo; Primeira</a>
@@ -58,12 +71,50 @@
 
       <span class="current">
             Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}.
-        </span>
+      </span>
 
       {% if page_obj.has_next %}
         <a href="?page={{ page_obj.next_page_number }}">Próximo</a>
         <a href="?page={{ page_obj.paginator.num_pages }}">Ultimo &raquo;</a>
       {% endif %}
     </span>
-  </div>
+    </div>
+  {% else %}
+    <div class="alert alert-warning" role="alert">
+      Não existe registros de despesas
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block jquery %}
+  <script>
+      $(function () {
+          $('#filter-button').on('click', () => {
+              const url = new URL(window.location.href);
+
+              const expense = $('#expense').val();
+              const year = $('#year').val();
+              const month = $('#month').val();
+
+              if (expense) {
+                  url.searchParams.set('expense', expense);
+              } else {
+                  console.log('aa')
+                  url.searchParams.delete('expense');
+              }
+              if (year) {
+                  url.searchParams.set('year', year);
+              }
+              if (month) {
+                  url.searchParams.set('month', month);
+              }
+              window.location.href = url.href;
+          })
+      })
+      $(document).on('keypress', function (e) {
+          if (e.which == 13) {
+              $('#filter-button').click();
+          }
+      });
+  </script>
 {% endblock %}

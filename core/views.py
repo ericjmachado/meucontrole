@@ -2,15 +2,15 @@ from datetime import datetime
 
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.views import LoginView as LoginViewNative
+from django.contrib.auth.views import LoginView as LoginViewNative, LogoutView as LogoutViewNative
 from django.core.paginator import Paginator
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import TemplateView, FormView
 
 from . import forms
-from .mixins import LogoutMixin
 from . import models
+from .mixins import LogoutMixin
 
 
 class LoginView(LogoutMixin, LoginViewNative):
@@ -37,11 +37,24 @@ class HomeView(LoginRequiredMixin, TemplateView):
             'Novembro', 'Dezembro'
         ]
         now = datetime.now()
+        qp = self.request.GET
+        year_selected = qp.get('year', now.year)
+        month_selected = qp.get('month', now.month)
+        expense_filter = qp.get('expense')
         kwargs['months'] = [{"label": value, "value": index + 1} for index, value in enumerate(months)]
-        kwargs['month_selected'] = now.month
+        kwargs['month_selected'] = int(month_selected)
         kwargs['years'] = [i for i in range(2021, 2031)]
-        kwargs['year_selected'] = now.year
-        expenses = models.Expense.objects.filter(user=self.request.user).order_by('date')
+        kwargs['year_selected'] = int(year_selected)
+        kwargs['expense'] = ''
+
+        expenses = models.Expense.objects.filter(user=self.request.user,
+                                                 date__month=month_selected,
+                                                 date__year=year_selected).order_by('-date')
+
+        if expense_filter:
+            kwargs['expense'] = expense_filter
+            expenses = expenses.filter(name__icontains=expense_filter)
+
         paginator = Paginator(expenses, 10)
         page_number = self.request.GET.get('page')
         page_obj = paginator.get_page(page_number)
@@ -81,3 +94,9 @@ class ExpenseView(LoginRequiredMixin, FormView):
         obj.save()
         messages.success(self.request, 'Despesas salvo com sucesso')
         return redirect('home')
+
+
+class LogoutView(LogoutMixin, LogoutViewNative):
+
+    def get_next_page(self):
+        return reverse_lazy('login')

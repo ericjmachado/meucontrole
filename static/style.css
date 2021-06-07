@@ -15,7 +15,7 @@
     flex-direction: column;
 }
 
-.card > form .submit-div {
+.submit-div {
     display: flex;
     align-items: center;
     justify-content: center;
